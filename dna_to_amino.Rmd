@@ -1,0 +1,219 @@
+---
+title: 'BT1013 | DNA to Aminoacids '
+author:
+- Aleksandr Morozov, A00824394
+date: "13 - 05 - 2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+
+# These are the global parameters.
+knitr::opts_chunk$set(echo = TRUE,   # Show the code in the  file
+                      eval = TRUE)   # Execute the code
+
+```                                              
+
+## Ejercicios: 
+1. Converter from the DNA FASTA format to Aminoacid sequence.
+
+```{r}
+
+#====Defining Functions====
+
+#Clears "\n" from the input, returns a vector of characters.
+clear_dna <- function(raw_dna){
+  extract_dna <- strsplit(raw_dna, "")[[1]]
+  cleared <- c()
+  for(i in extract_dna){
+    if(i == "a" || i == "g" || i == "t" || i == "c"){
+      cleared <- c(cleared, i)
+    }
+  }
+  return(cleared)
+}
+
+#Converts DNA sequence to RNA sequence. (By Replacing A-U, G-C, T-A, C-G)
+to_rna <- function(dna){
+  rna <- c()
+  for(i in (1:length(dna))){
+    if(dna[i] == "t"){
+      rna[i] = "u"
+    }
+    if(dna[i] == "g"){
+      rna[i] = "g"
+    }
+    if(dna[i] == "c"){
+      rna[i] = "c"
+    }
+    if(dna[i] == "a"){
+      rna[i] = "a"
+    }
+  }
+  return(rna)
+}
+
+#Unites strings in a vector in a group of 3: [c("a","b","c") to c("abc")]
+make_codons <- function(rna){
+  
+  codones <- c()
+  i <- 1
+  j <- 1
+  
+  if(length(rna) %% 3 == 0){
+    
+    while(i < length(rna)){
+      codones[j] = sprintf("%s%s%s", rna[i], rna[i+1], rna[i+2])
+      j <- j+1 
+      i <- i+3
+    }
+  }
+  
+  else{
+    print("Check your RNA sequence. It is not multiple of 3. ")
+  }
+  
+  return(codones)
+}
+
+#Translates ARN sequence to Aminoacid
+translate <- function(codons){
+  
+  translated <- c()
+  
+  len = c(1:length(codons))
+  for(i in len){
+    
+    #Checking for the START and STOP
+    
+    if(codons[i] == 'uaa' ||  codons[i] == "uag" || codons[i] == "uga"){
+      translated[i] = "STOP"
+      #break
+    }
+    
+    if(codons[i] == "aug"){
+      translated[i] = "Met"
+    }
+    
+    if(codons[i] == "uuu" || codons[i] == "uuc"){
+      translated[i] = "Phe"
+    }
+    
+    if(codons[i] == "uua" || codons[i] == "uug" || codons[i] == "cuu" ||
+       codons[i] == "cuc" || codons[i] == "cuc" || codons[i] == "cua" || 
+       codons[i] == "cug"){
+      
+      translated[i] = "Leu"
+    }
+    
+    if(codons[i] == "auu" || codons[i] == "auc" || codons[i] == "aua" ){
+      translated[i] = "Ile"
+    }
+    
+    if(codons[i] == "guu" || codons[i] == "guc" || codons[i] == "gua" 
+       || codons[i] == "gug"){
+      translated[i] = "Val"
+    }
+    
+    if(codons[i] == "ucu" || codons[i] == "ucc" || codons[i] == "uca" 
+       || codons[i] == "ucg"){
+      translated[i] = "Ser"
+    }
+    
+    if(codons[i] == "ccu" || codons[i] == "ccc" || codons[i] == "cca" 
+       || codons[i] == "ccg"){
+      translated[i] = "Pro"
+    }
+    
+    if(codons[i] == "acu" || codons[i] == "acc" || codons[i] == "aca" 
+       || codons[i] == "acg"){
+      translated[i] = "Thr"
+    }
+    
+    if(codons[i] == "gcu" || codons[i] == "gcc" || codons[i] == "gca" 
+       || codons[i] == "gcg"){
+      translated[i] = "Ala"
+    }
+    
+    if(codons[i] == "uau" || codons[i] == "uac"){
+      translated[i] = "Tyr"
+    }
+    
+    if(codons[i] == "cau" || codons[i] == "cac"){
+      translated[i] = "His"
+    }
+    
+    if(codons[i] == "caa" || codons[i] == "cag"){
+      translated[i] = "Gin"
+    }
+    
+    if(codons[i] == "aau" || codons[i] == "aac"){
+      translated[i] = "Asn"
+    }
+    
+    if(codons[i] == "aaa" || codons[i] == "aag"){
+      translated[i] = "Lys"
+    }
+    
+    if(codons[i] == "gau" || codons[i] == "gac"){
+      translated[i] = "Asp"
+    }
+    
+    if(codons[i] == "gaa" || codons[i] == "gag"){
+      translated[i] = "Glu"
+    }
+    
+    if(codons[i] == "ugu" || codons[i] == "ugc"){
+      translated[i] = "Cys"
+    }
+    
+    if(codons[i] == "ugg"){
+      translated[i] = "Tyr"
+    }
+    
+    if(codons[i] == "cgu" || codons[i] == "cgc" || codons[i] == "cga" 
+       || codons[i] == "cgg" || codons[i] == "aga" || codons[i] == "agg"){
+      translated[i] = "Arg"
+    }
+    
+    if(codons[i] == "agu" || codons[i] == "agc"){
+      translated[i] = "Ser"
+    }
+    
+    if(codons[i] == "ggu" || codons[i] == "ggc" || codons[i] == "gga" 
+       || codons[i] == "ggg"){
+      translated[i] = "Gly"
+    }
+  }
+  return(translated)
+}
+
+raw_dna <- tolower("ATGCTTGACGCTCAAACCATCGCTACAGTAAAAGCCACCATCCCTTTACTGGTGGAAACGGGGCCAAAGT
+TAACCGCCCATTTCTACGACCGTATGTTTACTCATAACCCAGAACTCAAAGAAATTTTTAACATGAGTAA
+CCAGCGTAATGGCGATCAACGTGAAGCCCTGTTTAACGCTATTGCCGCCTACGCCAGTAATATTGAAAAC
+CTGCCTGCGCTGCTGCCAGCGGTAGAAAAAATCGCGCAGAAGCACACCAGCTTCCAGATCAAACCGGAAC
+AGTACAACATCGTCGGTGAACACCTGTTGGCAACGCTGGACGAAATGTTCAGCCCGGGGCAGGAAGTGCT
+GGACGCGTGGGGTAAAGCCTATGGTGTACTGGCTAATGTATTTATCAATCGCGAGGCGGAAATCTATAAC
+GAAAACGCCAGCAAAGCCGGTGGTTGGGAAGGTACTCGCGATTTCCGCATTGTGGCTAAAACACCGCGCA
+GCGCGCTTATCACCAGCTTCGAACTGGAGCCGGTCGACGGTGGCGCAGTGGCAGAATACCGTCCGGGGCA
+ATATCTCGGCGTCTGGCTGAAGCCGGAAGGTTTCCCACATCAGGAAATTCGTCAGTACTCTTTGACTCGC
+AAACCGGATGGCAAAGGCTATCGTATTGCGGTGAAACGCGAAGAGGGTGGGCAGGTATCCAACTGGTTGC
+ACAATCACGCCAATGTTGGCGATGTCGTGAAACTGGTCGCTCCGGCAGGTGATTTCTTTATGGCTGTCGC
+AGATGACACACCAGTGACGTTAATCTCTGCCGGTGTTGGTCAAACGCCAATGCTGGCAATGCTCGACACG
+CTGGCAAAAGCAGGCCACACAGCACAAGTGAACTGGTTCCATGCGGCAGAAAATGGCGATGTTCACGCCT
+TTGCCGATGAAGTTAAGGAACTGGGGCAGTCACTGCCGCGCTTTACCGCGCACACCTGGTATCGTCAGCC
+GAGCGAAGCCGATCGCGCTAAAGGTCAGTTTGATAGCGAAGGTCTGATGGATTTGAGCAAACTGGAAGGT
+GCGTTCAGCGATCCGACAATGCAGTTCTATCTCTGCGGCCCGGTTGGCTTCATGCAGTTTACCGCGAAAC
+AGTTAGTGGATCTGGGCGTGAAGCAGGAAAACATTCATTACGAATGCTTTGGCCCGCATAAGGTGCTGTA
+A")
+
+dna <- clear_dna(raw_dna)
+rna <- to_rna(dna)
+codons_rna <- make_codons(rna)
+aminos <- translate(codons_rna)
+printing <- paste(aminos, sep="", collapse="")
+print(printing)
+```
