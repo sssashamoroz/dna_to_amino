@@ -1,6 +1,7 @@
-DNA sequence to Amino Acid Converter. 
 
 BT1013 Assigment. 
+
+DNA sequence to Amino Acid Converter. 
 
 This script was made for the class assigment, the main goal of which was to trascribe the following DNA sequence into Aminoacid sequence using R. In order for the script to work correcltly one should select the pure DNA sequence ( within the - signs ), it will clean the (\n) new line characters and convert the string to a single character vector. The codons() function then checks of the sequence is multiple of 3 and if so unites the characters in vector of 3 char strings which later can be transalted to Aminoacid sequence using translate() function.
 
